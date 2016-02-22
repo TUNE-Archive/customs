@@ -1,0 +1,46 @@
+---
+team: "ops"
+project: "customs"
+repository: "git@github.com:Adapp/customs.git"
+
+agent:
+  build: "./"
+  test: "./tests/"
+  detach: true
+  cmd:
+    - agent
+    - 192.168.1.37
+
+environments:
+
+  development:
+    local:
+      hosts:
+        default:
+          - address: "https://172.16.135.138:2376"
+            ssl_cert_path: "/Users/alexb/.docker/machine/machines/ff01-dev"
+            verify: false
+
+        agent:
+          - address: "http://192.168.1.37:2375"
+
+    sea3:
+      hosts:
+        default:
+          - address: "https://dh-alexb01-dev.sea3.office.priv:2376"
+            ssl_cert_path: "/Users/alexb/.docker/certs/client/dev/"
+
+      quality_control:
+        agent:
+          binds:
+            - "/etc/consul/certs/:/etc/consul/certs/:ro"
+            - "/etc/docker/certs/client/dev/:/etc/docker/certs/client/dev/:ro"
+
+          cmd:
+            - agent
+            - https://dh-alexb01-dev.sea3.office.priv
+            - --token=yourtoken
+            - --agency-port=8505
+            - --agency-tls=/etc/consul/certs/
+            - --docker-port=2376
+            - --docker-tls=/etc/docker/certs/client/dev/

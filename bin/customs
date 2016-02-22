@@ -1,0 +1,65 @@
+#!/usr/bin/env python
+# -*- coding: utf-8; -*-
+from __future__ import unicode_literals
+import argparse
+import time
+import sys
+import os
+
+sys.path.append(os.path.realpath(os.path.join(os.path.dirname(__file__), '..')))
+from customs.const       import VERSION
+from customs.utils       import logger
+from customs.cli.agent   import AgentCommand
+from customs.cli.rules   import RulesCommand
+from customs.cli.catalog import CatalogCommand
+
+
+def main():
+    """
+    This is the main function to be executed when running the customs cli.
+    """
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-v', '--version',
+                        action='version',
+                        version='%s is current on version : %s' % (parser.prog, VERSION),
+                        help='customs version')
+    # Create sub parser
+    sub_parser = parser.add_subparsers(
+        title='customs',
+        description='Agent is an agent for registration / reconciliation for docker containers and their metadata with Consul.',
+        help='additional help'
+    )
+
+    # add agent sub command
+    AgentCommand(sub_parser)
+
+    # add catalog sub commands
+    CatalogCommand(sub_parser)
+
+    # add rule sub command
+    RulesCommand(sub_parser)
+
+    # parse args
+    args, extra_args = parser.parse_known_args()
+
+    # call function set by defaults.
+    if extra_args:
+        msg = []
+        for item in extra_args:
+            if '=' in item:
+                msg.append(item.split('=')[0])
+
+            elif item.startswith('-') or item.startswith('--'):
+                msg.append(item)
+
+        raise AttributeError("The following are not valid options: {0}".format(', '.join(msg)))
+    elif hasattr(args, 'func'):
+        args.func(args)
+    else:
+        parser.parse_args(['--help']).cmd()
+
+if __name__ == '__main__':
+    start_time = time.time()
+    main()
+    logger.info("elapsed: {0} seconds".format(time.time() - start_time))
+    exit()

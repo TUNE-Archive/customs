@@ -1,0 +1,14 @@
+[Unit]
+Description=Docker Application - Customs for registering docker containers with Consul.
+Documentation=https://github.com/tuneoss/customs
+After=network.target docker.socket docker.service
+Requires=docker.socket
+
+[Service]
+ExecStartPre=/usr/local/bin/docker pull customs-agent:latest
+ExecStart=/usr/local/bin/docker run --rm --volume=/path/to/docker/certs:/path/in/container:ro --volume=/path/to/consul/certs:/path/in/container:ro --name=customs-agent customs-agent:latest agent 192.168.1.37
+Restart=on-failure
+RestartSec=15
+
+[Install]
+WantedBy=multi-user.target
