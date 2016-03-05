@@ -16,7 +16,7 @@ from .utils        import normalize_keys, logger
 class Agency(object):
     """ Agency is a abstraction of the Consul
     """
-    ROOT_FOLDER   = '.customs'
+    ROOT_FOLDER = '.customs'
 
     def __init__(self, **agency):
 
@@ -154,7 +154,7 @@ class Agency(object):
     def update_rule(self, rule):
         self.create_rule(rule)
 
-    def service_metadata(self, service_name:str) -> dict:
+    def service_metadata(self, service_name: str) -> dict:
         service_metadata = self.kv.get('{0}/containers/{1}'.format(self.name, service_name), {})
 
         if service_metadata:
