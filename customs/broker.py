@@ -106,7 +106,6 @@ class Broker(Process):
                             )
                         )
 
-
                         rule         = await self.__find_rule(event.name)
                         service_name = self.__get_service_name(event.name, rule)
 
@@ -135,7 +134,7 @@ class Broker(Process):
 
         asyncio.ensure_future(self._start_clearing_brokerage_queue())
 
-    async def __process_cleared_goods(self, container_name:str, service_name:str, container_metadata:dict, rule):
+    async def __process_cleared_goods(self, container_name: str, service_name: str, container_metadata: dict, rule):
         try:
             # TODO: validation
             service_checksum = self._agency.checksums.get(service_name)
@@ -148,7 +147,19 @@ class Broker(Process):
                 checks, metadata, tags = await self.__apply_rules(container_metadata, rule)
                 logger.info('registering container: {0} as service: {1}.'.format(container_name, service_name))
 
-                # TODO: must add port
+                network_mode  = container_metadata['host_config'].get('network_mode')
+                exposed_ports = await self.__get_exposed_ports(container_metadata, network_mode)
+
+                if network_mode == 'host':
+                    ip_address = self._agency.config.get('advertise_addr')
+                else:
+                    ip_address = container_metadata['network_settings'].get('ip_address')
+
+                if exposed_ports and ip_address:
+                    exposed_port = exposed_ports.pop() if len(exposed_ports) == 1 else -1
+                else:
+                    exposed_port = None
+
                 self._agency.register_service(
                     service_name,
                     rule_checksum,
@@ -156,8 +167,8 @@ class Broker(Process):
                     httpcheck=checks.get('httpcheck'),
                     interval=checks.get('interval'),
                     ttl=checks.get('ttl'),
-                    address=container_metadata['network_settings'].get('ip_address'),
-                    port=None,
+                    address=ip_address if ip_address else None,
+                    port=exposed_port,
                     tags=tags
                 )
 
@@ -168,6 +179,30 @@ class Broker(Process):
             logger.error(service_name)
 
             logger.error(e)
+
+    async def __get_exposed_ports(self, container_metadata: dict, network_mode: str):
+        """
+        expected value: {'80/tcp': [{'host_port': '8888', 'host_ip': '0.0.0.0'}], '443/tcp': None}
+        """
+        bound_ports = []
+
+        if network_mode == 'host':
+            exposed_ports = container_metadata['config'].get('exposed_ports', {})
+            for exposed_port in exposed_ports.keys():
+                port, protocol = exposed_port.split('/')
+
+                bound_ports.append(int(port))
+        else:
+            exposed_ports = container_metadata['network_settings'].get('ports', {})
+
+            for exposed_port in exposed_ports.values():
+                if exposed_port:
+                    for host_data in exposed_port:
+                        for key, value in host_data.items():
+                            if key == 'host_port':
+                                bound_ports.append(int(value))
+
+        return bound_ports
 
     async def __process_rejected_goods(self, service_name):
         try:
