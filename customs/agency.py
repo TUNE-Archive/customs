@@ -127,7 +127,7 @@ class Agency(object):
         self._consul.agent.service.deregister(service_name)
         del self.kv['{}/{}/{}'.format(self.name, 'containers', service_name)]
 
-    def get_rule(self, service:str):
+    def get_rule(self, service: str):
         rules_data = self.kv.get('{0}/{1}'.format(self.ROOT_FOLDER, service))
 
         if rules_data:
@@ -139,9 +139,9 @@ class Agency(object):
 
         self._checksums[service_name] = rule_checksum
         self.kv['{0}/containers/checksums'.format(self.name)] = yaml.safe_dump(
-                self._checksums,
-                default_flow_style=False
-            ).encode('utf-8')
+            self._checksums,
+            default_flow_style=False
+        ).encode('utf-8')
 
         try:
             self._consul.agent.service.register(
@@ -172,12 +172,12 @@ class Agency(object):
     ##
     def __create_consul_client(self):
         self._consul = consulate.Consul(
-                    adapter=RequestAdapter,
-                    host=self.host,
-                    port=self.host_port,
-                    datacenter=None,
-                    token=self._token,
-                    scheme=self.host_scheme
+            adapter=RequestAdapter,
+            host=self.host,
+            port=self.host_port,
+            datacenter=None,
+            token=self._token,
+            scheme=self.host_scheme
         )
 
         if self.data_center is None:
@@ -185,12 +185,12 @@ class Agency(object):
 
         elif self.data_center in self.catalog.datacenters():
             self._consul = consulate.Consul(
-                    adapter=RequestAdapter,
-                    host=self.host,
-                    port=self.host_port,
-                    datacenter=self.data_center,
-                    token=self._token,
-                    scheme=self.host_scheme
+                adapter=RequestAdapter,
+                host=self.host,
+                port=self.host_port,
+                datacenter=self.data_center,
+                token=self._token,
+                scheme=self.host_scheme
             )
 
         else:
@@ -228,6 +228,7 @@ class Agency(object):
             else:
                 raise SyntaxError("There is a syntax error in the rules.")
 
+
 class RequestAdapter(ConsulateRequest):
     TLS = None
 
@@ -245,7 +246,7 @@ class RequestAdapter(ConsulateRequest):
         return self._tls
 
     @tls.setter
-    def tls(self, tls:dict):
+    def tls(self, tls: dict):
         if not isinstance(tls, dict):
             raise TypeError('tls must be a dict.')
 

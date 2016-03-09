@@ -8,9 +8,10 @@ from yaml import SafeLoader, YAMLError
 
 from customs.utils import normalize_keys
 
+
 class Rules(object):
 
-    def __init__(self, name:str, rules_data:str=None):
+    def __init__(self, name: str, rules_data: str=None):
         """
         :return:
         """
@@ -23,11 +24,12 @@ class Rules(object):
 
         if 'id' not in self._metadata:
             self._metadata['id'] = True
+
     ##
     # class methods
     ##
     @classmethod
-    def create(cls, service:str='default'):
+    def create(cls, service: str='default'):
         with tempfile.NamedTemporaryFile() as tmp:
             # write message to the user explaining whats going on.
             tmp.write(
@@ -142,7 +144,7 @@ class Rules(object):
         with tempfile.NamedTemporaryFile() as tmp:
             # write configuration template to tmp file for user.
             tmp.write(
-               self.to_yaml().encode('utf-8')
+                self.to_yaml().encode('utf-8')
             )
 
             tmp.flush()
@@ -167,7 +169,7 @@ class Rules(object):
     ##
     # private methods
     ##
-    def __load(self, rules_data:str) -> None:
+    def __load(self, rules_data: str) -> None:
         """
         loads a yaml str, serializes and normalized the rule data. Then assigns the rule data to properties.
         :param config_file: A :string: loaded from a yaml file.

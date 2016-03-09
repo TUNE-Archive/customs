@@ -31,6 +31,7 @@ class CatalogCommand(CliBase):
         # add services sub command.
         CatalogServices(sub_parser)
 
+
 class CatalogDataCenters(object):
 
     def __init__(self, sub_parser):
@@ -58,6 +59,7 @@ class CatalogDataCenters(object):
         exit_code = 0
         if exit_code != 0:
             exit(exit_code)
+
 
 class CatalogServices(object):
 

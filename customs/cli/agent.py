@@ -5,9 +5,10 @@ from customs       import Agent
 from customs.utils import logger, validate_path
 from .cli_base     import CliBase
 
-class AgentCommand(CliBase):
-    """ Broker
 
+class AgentCommand(CliBase):
+    """
+    Broker
     """
     def __init__(self, sub_parser):
         logger.setup_logging('cli')

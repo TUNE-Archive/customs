@@ -241,10 +241,7 @@ def debug(msg, *args, **kwargs):
     _logger.debug(msg, *args, **kwargs)
 
 
-def set_level(level):
-    if not isinstance(level, six.string_types):
-        raise TypeError('level must be a string.')
-
+def set_level(level: str):
     level = level.upper()
     if level not in LEVELS:
         raise LookupError('was unable to find level: {0} in {1}'.format(level, ', '.join(LEVELS)))

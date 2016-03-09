@@ -3,7 +3,7 @@ from .const import CONTAINER_EVENTS, IMAGE_EVENTS
 
 
 class DockerEvent(object):
-    def __init__(self, docker_id:str, image:str, status:str, epoch:int):
+    def __init__(self, docker_id: str, image: str, status: str, epoch: int):
         self.docker_id  = docker_id
         self.image      = image
         self.epoch      = epoch
@@ -34,7 +34,7 @@ class DockerEvent(object):
         return self._name
 
     @name.setter
-    def name(self, value:str):
+    def name(self, value: str):
         self._name = value
 
     @property
@@ -42,5 +42,5 @@ class DockerEvent(object):
         return self._meta_data
 
     @meta_data.setter
-    def meta_data(self, value:dict):
+    def meta_data(self, value: dict):
         self._meta_data = value

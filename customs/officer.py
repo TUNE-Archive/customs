@@ -22,7 +22,7 @@ class Officer(Process):
     API_VERSION = '1.20'
     TIMEOUT     = 60
 
-    def __init__(self, docker_daemon:dict, dispatch_queue:Queue):
+    def __init__(self, docker_daemon: dict, dispatch_queue: Queue):
         self.url                = urlparse(docker_daemon.get('host'))
         self._client_session    = self.__configure_docker_client(docker_daemon)
         self._docker_info       = self._client_session.version()
@@ -67,7 +67,7 @@ class Officer(Process):
         self._client_session.close()
         super(Officer, self).terminate()
 
-    def __configure_docker_client(self, docker_daemon:dict) -> docker.Client:
+    def __configure_docker_client(self, docker_daemon: dict) -> docker.Client:
         if self.url.scheme == 'https':
             for cert_name_type in ('ca', 'cert', 'key'):
                 if 'tls_path' in docker_daemon and docker_daemon['tls_path']:
@@ -100,7 +100,7 @@ class Inspector(Process):
     API_VERSION = '1.20'
     TIMEOUT     = 60
 
-    def __init__(self, docker_daemon:dict, brokerage_queue:Queue, dispatch_queue:Queue, inventory, inventory_event:Event):
+    def __init__(self, docker_daemon: dict, brokerage_queue: Queue, dispatch_queue: Queue, inventory, inventory_event: Event):
         self.url              = urlparse(docker_daemon.get('host'))
         self._client_session  = self.__configure_docker_client(docker_daemon)
         self._docker_info     = self._client_session.version()
@@ -113,7 +113,7 @@ class Inspector(Process):
 
         super(Inspector, self).__init__()
 
-    def __configure_docker_client(self, docker_daemon:dict) -> docker.Client:
+    def __configure_docker_client(self, docker_daemon: dict) -> docker.Client:
         if self.url.scheme == 'https':
             for cert_name_type in ('ca', 'cert', 'key'):
                 if 'tls_path' in docker_daemon and docker_daemon['tls_path']:
@@ -141,7 +141,6 @@ class Inspector(Process):
         else:
             return docker.Client(self.url.geturl(), timeout=self.TIMEOUT, version=self.API_VERSION)
 
-
     def start(self):
         self.daemon = True
         super(Inspector, self).start()
@@ -167,7 +166,7 @@ class Inspector(Process):
 
         super(Inspector, self).terminate()
 
-    async def _get_dispatch_instructions(self, instructions:dict={}):
+    async def _get_dispatch_instructions(self, instructions: dict={}):
         try:
             if self._dispatch_queue.empty() or self._inventory_event.is_set():
                 await asyncio.sleep(1)
@@ -263,7 +262,7 @@ class Inspector(Process):
             logger.error('error while adding inventory.')
             logger.error(e)
 
-    async def _final_inspection(self, instructions:dict):
+    async def _final_inspection(self, instructions: dict):
         """
         :param instructions:
         :return:
@@ -318,7 +317,7 @@ class Inspector(Process):
         except Exception as e:
             logger.error(e)
 
-    async def _inspect_container(self, id:str, retry_count:int=0):
+    async def _inspect_container(self, id: str, retry_count: int=0):
         meta_data = None
 
         try:
@@ -336,7 +335,7 @@ class Inspector(Process):
 
         return meta_data
 
-    async def _inspect_image(self, id:str, retry_count:int=0):
+    async def _inspect_image(self, id: str, retry_count: int=0):
         meta_data = None
 
         try:

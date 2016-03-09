@@ -63,13 +63,13 @@ class RulesCommand(CliBase):
                 logger.info(rule)
         else:
             logger.error('There are no rules defined. Please create a default run the following command:'
-                        '\"customs rules {0} create default\"'.format(agency_host))
+                         '\"customs rules {0} create default\"'.format(agency_host))
 
         exit_code = 0
         if exit_code != 0:
             exit(exit_code)
 
-    def __create(self,  args, **extra_args):
+    def __create(self, args, **extra_args):
         if not isinstance(args, argparse.Namespace):
             raise TypeError(logger.error("args should of an instance of argparse.Namespace"))
 

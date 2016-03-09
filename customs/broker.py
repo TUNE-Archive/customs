@@ -6,13 +6,14 @@ from multiprocessing import Queue, Process, Event
 from .agency import Agency
 from .utils  import logger, ProcessHandler, normalize_keys
 
+
 class Broker(Process):
     """ Agent broking or customs brokerage is a profession that involves the "clearing" of goods through customs
     barriers for importers and exporters (usually businesses). This involves the preparation of documents and/or
     electronic submissions, the calculation and payment of taxes, duties and excises, and facilitating communication
     between government authorities and importers and exporters.
     """
-    def __init__(self, agency:Agency, brokerage_queue:Queue, inventory, inventory_event:Event, reconcile_event:Event):
+    def __init__(self, agency: Agency, brokerage_queue: Queue, inventory, inventory_event: Event, reconcile_event: Event):
         # TODO: must move the instantiation of agency into this class
         self._agency               = agency
         self._brokerage_queue      = brokerage_queue
@@ -344,7 +345,7 @@ class Broker(Process):
 
         return tags
 
-    def __get_service_name(self, container_name:str, rule) -> str:
+    def __get_service_name(self, container_name: str, rule) -> str:
         regex = re.compile(r'{0}'.format(rule.service_regex), flags=re.IGNORECASE)
         match = regex.search(container_name)
 

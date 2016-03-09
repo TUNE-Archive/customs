@@ -1,6 +1,4 @@
 # -*- coding: utf-8; -*-
-import asyncio
-import functools
 import json
 import os
 import re
@@ -12,7 +10,7 @@ from . import logger
 def validate_uri(uri, scheme=True):
     regex = re.compile(
         r'^(?:http|ftp)s?://'  # http:// or https://
-        r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|' # domain...
+        r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|'  # domain...
         r'localhost|'  # localhost...
         r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'  # ...or ip
         r'(?::\d+)?'  # optional port
@@ -212,8 +210,6 @@ def parse_ssl_certificates(ssl_cert_path):
             else:
                 pass
 
-
-
     ssl_path_dict = {
         'ssl_cert': consul_ssl_cert,
         'ssl_key': consul_ssl_key,
@@ -256,7 +252,7 @@ def load_acl(path):
 
 class ProcessHandler:
 
-    def __init__(self, exit_on_term:bool=True):
+    def __init__(self, exit_on_term: bool=True):
         self.received_term_signal = self.received_signal = False
         self.exit_on_term = exit_on_term
 
