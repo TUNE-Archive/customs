@@ -16,18 +16,18 @@ def lint():
     path = os.path.realpath(os.getcwd())
     cmd = 'flake8 %s' % path
     opt = ''
-    print(">>> Linting codebase with the following command: %s %s" % (cmd, opt))
+    print(">>> Linting codebase with the following command: {0} {1}".format(cmd, opt))
 
     try:
         return_code = call([cmd, opt], shell=True)
         if return_code < 0:
-            print >> sys.stderr, ">>> Terminated by signal", -return_code
+            print(">>> Terminated by signal: {0}".format(return_code))
         elif return_code != 0:
             sys.exit('>>> Lint checks failed')
         else:
-            print >> sys.stderr, ">>> Lint checks passed", return_code
+            print(">>> Lint checks passed")
     except OSError as e:
-        print >> sys.stderr, ">>> Execution failed:", e
+        print(">>> Execution failed:".format(e))
 
 
 def unit_test(extra_args=[]):
@@ -37,8 +37,7 @@ def unit_test(extra_args=[]):
     path = os.path.realpath(os.path.join(os.getcwd(), 'tests/unit'))
     args = [
         path, '-x', '-v', '--with-coverage', '--cover-erase',
-        '--cover-package=./build/lib/freight_forwarder',
-        '--cover-package=./freight_forwarder'
+        '--cover-package=./customs'
     ]
 
     if extra_args:
@@ -54,7 +53,7 @@ def test_suite():
     """
     run both unit test and lint with default args
 
-    Need to come back to add flags to allow multiple arugments to each
+    Need to come back to add flags to allow multiple arguments to each
     unit_test and lint
     """
     lint()

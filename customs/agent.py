@@ -1,5 +1,4 @@
 # -*- coding: utf-8; -*-
-import atexit
 import os
 import time
 from multiprocessing import Queue, Manager, Event
@@ -12,7 +11,7 @@ from .officer          import Officer, Inspector
 
 class Agent(object):
 
-    def __init__(self, agency:dict, reconcile_tick:int, docker_daemon:dict={}):
+    def __init__(self, agency: dict, reconcile_tick: int, docker_daemon: dict={}):
         """
         :return:
         """
@@ -55,7 +54,7 @@ class Agent(object):
 
             while True:
                 if self._handler.received_term_signal:
-                    print('here here here in side term singal')
+                    print('here here here in side term signal')
                     break
 
                 time.sleep(1)
@@ -104,7 +103,7 @@ class Agent(object):
 
             self._broker.start()
 
-    def __get_docker_daemon_info(self, docker_daemon:dict) -> dict:
+    def __get_docker_daemon_info(self, docker_daemon: dict) -> dict:
         if not docker_daemon.get('host'):
             docker_daemon['host'] = os.getenv('DOCKER_HOST')
 
